@@ -1,0 +1,56 @@
+1. Penjelasan tentang relas-relasi tabel yang sudah dibuat
+	- tabel materi berelasi dengan tabel pengajar, tabel pesserta dan tabel penjadwalan kelas menggunakan relasi one to many
+	- tabel kategori berelasi dengan tabel materi menggunakan relasi one to many
+   	- tabel peserta berelasi dengan tabel penjadwalan kelas menggunakan relasi one to many
+  	- tabel pengajar berelasi dengan tabel penjadwalan kelas menggunakan relasi one to many
+
+2. Input data kategori, materi, pengajar, peserta, penjadwalan_kelas
+	a. data kategori
+		INSERT INTO `kategori` (`id`, `nama`) VALUES (1, 'Desain Grafis');
+
+	b. data materi
+		INSERT INTO `materi` (`id`, `kode`, `deskripsi`, `durasi_dan_biaya`, `kategori_id`) VALUES
+		(1, 'cv', 'Kursus Canva', '1 jam 20000', 1),
+		(2, 'in', 'Kursus Inkscape', '1 jam 15000', 1),
+		(3, 'gm', 'Kursus GIMP', '1 Jam 10000', 1);
+	c. data pengajar
+		INSERT INTO `pengajar` (`id`, `nim`, `nama`, `gender`, `hp`, `email`, `alamat`, `foto`, `materi_id`) VALUES
+		(10, 12345678, 'Robert Kursi', 'Perempuan', 475962350, 'robertkursi@gmail', 'Bogor', '', 1),
+		(20, 3826296, 'Jhonson Eliziber', 'Laki - Laki', 328040, 'jhonsonemel@gmail.com', 'Siduarjo', NULL, 3),
+		(30, 3929072, 'Miya binti Layla', 'Perempuan', 397402, 'laylatulmiya@gmail.com', 'Jakarta', NULL, 2);
+	d. data peserta
+		INSERT INTO `peserta` (`id`, `nama`, `gender`, `hp`, `email`, `foto`, `materi_id`) VALUES
+		(1, 'Edoradore', 'Perempuan', 983274070, 'edoradore@gmail.com', NULL, 2),
+		(2, 'Angela Gustin', 'Perempuan', 83847979, 'angelagustin@gmail.com', NULL, 2),
+		(3, 'Alucrad  Hanzo', 'Laki-laki', 842569875, 'alucradhanzo@gmail.com', NULL, 1),
+		(4, 'Otong apiw', 'Laki - Laki', 854789653, 'otongapiw@gmail.com', NULL, 3),
+		(5, 'Harlia Purnama', 'Perempuan', 977625437, 'harliap@gmail.com', NULL, 3),
+		(6, 'Sricahyani', 'Perempuan', 564284957, 'yanicah@gmail.com', NULL, 3);
+	e. data penjadwalan kelas
+		INSERT INTO `penjadwalan_kelas` (`id`, `kode_kelas`, `kelas`, `hari`, `tgl_mulai`, `tgl_akhir`, `jam_mulai`, `jam_akhir`, `materi_id`, `pengajar_id`, `peserta_id`) VALUES
+		(4, 'enam', 'anggrek', '2023-06-06', '2023-06-06', '2023-06-06', '08:00:00', '10:00:00', 3, 30, 4),
+		(5, 'lima', 'tulip', '2023-06-05', '2023-06-05', '2023-06-05', '08:00:00', '10:00:00', 2, 20, 6),
+		(6, 'empat', 'dahlia', '2023-06-04', '2023-06-04', '2023-06-04', '08:00:00', '10:00:00', 3, 30, 2),
+		(7, 'tiga', 'matahari', '2023-06-03', '2023-06-03', '2023-06-03', '08:00:00', '10:00:00', 2, 20, 5),
+		(8, 'dua', 'melati', '2023-06-02', '2023-06-02', '2023-06-02', '08:00:00', '10:00:00', 3, 30, 1),
+		(9, 'satu', 'mawar', '2023-06-01', '2023-06-01', '2023-06-01', '08:00:00', '10:00:00', 1, 10, 3);
+
+3. Lakukan query inner join antara tabel kategori dengan materi
+	SELECT materi.* , kategori.nama AS kategori
+   	FROM materi 
+	INNER JOIN kategori ON kategori.id = materi.Kategori_id;
+
+4. Lakukan query inner join antara tabel kategori, materi pengajar, peserta, penjadwalan_kelas
+	SELECT penjadwalan_kelas.* , pengajar.nama, peserta.nama, materi.nama_materi, kategori.nama
+   	FROM penjadwalan_kelas
+   	INNER JOIN peserta  ON peserta.id = penjadwalan_kelas.peserta_id
+   	INNER JOIN pengajar ON pengajar.id = penjadwalan_kelas.pengajar_id
+   	INNER JOIN materi ON materi.id = penjadwalan_kelas.materi_id
+   	INNER JOIN kategori ON kategori.id = materi.kategori_id;
+
+5. Lakukan query inner join antara tabel kategori, materi pengajar, peserta, penjadwalan_kelas dengan pengaliasan nama tabel
+	SELECT k.*, mp.*, p.*, pk.*
+	FROM kategori AS k
+	INNER JOIN materi_pengajar AS mp ON k.id_kategori = mp.id_kategori
+	INNER JOIN peserta AS p ON mp.id_materi_pengajar = p.id_materi_pengajar
+	INNER JOIN penjadwalan_kelas AS pk ON p.id_peserta = pk.id_peserta;
